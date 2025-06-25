@@ -26,24 +26,25 @@ The main binaries that will be built are:
 ```sh
 ./build/release/duckdb
 ./build/release/test/unittest
-./build/release/extension/pdf/pdf.duckdb_extension
+./build/release/extension/pdf/pdf_scanner.duckdb_extension
 ```
 - `duckdb` is the binary for the duckdb shell with the extension code automatically loaded.
 - `unittest` is the test runner of duckdb. Again, the extension is already linked into the binary.
-- `pdf.duckdb_extension` is the loadable binary as it would be distributed.
+- `pdf_scanner.duckdb_extension` is the loadable binary as it would be distributed.
 
 ## Running the extension
 To run the extension code, simply start the shell with `./build/release/duckdb`.
 
-Now we can use the features from the extension directly in DuckDB. The template contains a single scalar function `pdf()` that takes a string arguments and returns a string:
+Options are 'full', 'lines' and 'chars'
+
 ```
-D select pdf('Jane') as result;
-┌───────────────┐
-│    result     │
-│    varchar    │
-├───────────────┤
-│ Pdf Jane 🐥 │
-└───────────────┘
+D select pdf_extract('/home/user/pdf.pdf', 'lines');
+┌─────────┬────────┬────────┬────────┬────────┬──────────┐
+│  text   │   x    │   y    │ width  │ height │ rotation │
+│ varchar │ double │ double │ double │ double │  double  │
+├─────────┴────────┴────────┴────────┴────────┴──────────┤
+│                           ...                          │
+└────────────────────────────────────────────────────────┘
 ```
 
 ## Running the tests
